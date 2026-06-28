@@ -29,6 +29,7 @@ export default function Register() {
   const [availableDistricts, setAvailableDistricts] = useState<District[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingLocations, setLoadingLocations] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -40,6 +41,8 @@ export default function Register() {
         }
       } catch (err) {
         console.error("Failed to load locations", err);
+      } finally {
+        setLoadingLocations(false);
       }
     };
     fetchLocations();
@@ -146,13 +149,14 @@ export default function Register() {
               <label className="block text-sm font-semibold text-text-main mb-1.5 ml-1">Division</label>
               <select 
                 className="w-full bg-black/20 border border-white/10 px-5 py-3.5 rounded-xl text-text-main focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all appearance-none cursor-pointer disabled:opacity-50"
+                name="divisionId"
                 value={formData.divisionId}
-                onChange={handleDivisionChange}
+                onChange={handleChange}
                 required
                 disabled={loadingLocations}
               >
                 <option value="" disabled className="bg-surface text-text-muted">Select Division</option>
-                {divisions.map(div => (
+                {locations.map(div => (
                   <option key={div.id} value={div.id} className="bg-surface text-text-main">{div.name}</option>
                 ))}
               </select>
